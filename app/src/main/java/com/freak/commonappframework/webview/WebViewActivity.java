@@ -283,7 +283,10 @@ public class WebViewActivity extends BaseAbstractSimpleActivity implements IActi
                     com.freak.commonappframework.utils.LogUtils.d(response.headers().toString());
                     com.freak.commonappframework.utils.LogUtils.d("状态码--》"+response.code());
                     com.freak.commonappframework.utils.LogUtils.d(response.header("content-type"));
-
+                    //拿到登陆后操作的某个网页的内容
+//                    Request request2=new Request.Builder().url(response.).build();
+//                    Response response2 = okHttpClient.newCall(redirectRequest).execute();
+//                    String result = response2.body().string();
                 }
             });
             return super.shouldInterceptRequest(view, request);
