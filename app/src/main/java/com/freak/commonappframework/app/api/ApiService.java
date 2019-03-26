@@ -19,7 +19,7 @@ public interface ApiService {
      * @return
      */
     @POST("/login")
-    Observable<HttpResult<LoginBean>> login(@Query("userName") String userName,
+    Observable<HttpResult> login(@Query("userName") String userName,
                                             @Query("pwd") String pwd
     );
 }

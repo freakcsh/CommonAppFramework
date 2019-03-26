@@ -14,6 +14,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -25,6 +26,8 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -55,8 +58,15 @@ import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static com.freak.commonappframework.utils.imagepick.ImageSelector.CUT_PHOTO;
 import static com.freak.commonappframework.utils.imagepick.ImageSelector.GET_PICTURE_SELECT_PHOTO;
@@ -86,7 +96,7 @@ public class WebViewActivity extends BaseAbstractSimpleActivity implements IActi
     public static int REQUEST_CODE_ACCESS_LOCATION_PERMISSION = 101;
     private LocationWebChromeClient mWebChromeClient;
 
-    public void startAction(Context context, @NonNull String url) {
+    public static void startAction(Context context, @NonNull String url) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra("url", url);
         context.startActivity(intent);
@@ -252,6 +262,52 @@ public class WebViewActivity extends BaseAbstractSimpleActivity implements IActi
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             handler.proceed();
+        }
+
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Nullable
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            Request request1 = new Request.Builder().url(request.getUrl().toString()).get().build();
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Call mCall = okHttpClient.newCall(request1);
+            mCall.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    com.freak.commonappframework.utils.LogUtils.d(response.headers().toString());
+                    com.freak.commonappframework.utils.LogUtils.d("状态码--》"+response.code());
+                    com.freak.commonappframework.utils.LogUtils.d(response.header("content-type"));
+
+                }
+            });
+            return super.shouldInterceptRequest(view, request);
+        }
+
+        /**
+         * 重定向
+         * @param view
+         * @param request
+         * @return
+         */
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            WebView.HitTestResult hitTestResult = view.getHitTestResult();
+            int type = hitTestResult.getType();
+            if (type != WebView.HitTestResult.UNKNOWN_TYPE) {
+                //没有进行重定向操作
+            } else {
+                //进行了重定向操作
+                view.loadUrl(request.getUrl().toString());
+                return false;
+            }
+            return super.shouldOverrideUrlLoading(view, request);
         }
     };
 

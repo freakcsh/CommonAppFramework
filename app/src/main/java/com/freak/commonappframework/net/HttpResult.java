@@ -1,14 +1,13 @@
 package com.freak.commonappframework.net;
 
 
-import com.freak.httphelper.AbstractHttpResult;
 
 /**
  * @author freak
  * @date 2019/2/19
  */
 
-public class HttpResult<T> extends AbstractHttpResult<T> {
+public class HttpResult<T>  {
     private int code;
 
     private String msg;
@@ -39,45 +38,6 @@ public class HttpResult<T> extends AbstractHttpResult<T> {
         this.data = data;
     }
 
-    @Override
-    protected T getResultData() {
-        return getData();
-    }
-
-    @Override
-    protected int getIntSuccessCode() {
-        return 200;
-    }
-
-    @Override
-    protected String getStringSuccessCode() {
-        return null;
-    }
-
-    @Override
-    protected String getResultErrorMsg() {
-        return getMsg();
-    }
-
-    @Override
-    protected int getIntResultCode() {
-        return getCode();
-    }
-
-    @Override
-    protected String getStringResultCode() {
-        return null;
-    }
-
-    @Override
-    protected int[] getIntOtherCode() {
-        return new int[]{0, 46};
-    }
-
-    @Override
-    protected String[] getStringOtherCode() {
-        return new String[0];
-    }
 
     @Override
     public String toString() {

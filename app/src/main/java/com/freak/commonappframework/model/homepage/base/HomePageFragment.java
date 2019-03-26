@@ -18,6 +18,7 @@ import com.freak.commonappframework.model.homepage.base.bean.LoginBean;
 import com.freak.commonappframework.scan.ScanActivity;
 import com.freak.commonappframework.utils.LogUtils;
 import com.freak.commonappframework.utils.imagepick.loader.ImagePickerUtils;
+import com.freak.commonappframework.webview.WebViewActivity;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
@@ -105,6 +106,7 @@ public class HomePageFragment extends BaseAbstractMvpFragment<HomepagePresenter>
                 break;
             //webView
             case R.id.btn3:
+                WebViewActivity.startAction(getActivity(),"https://blog.csdn.net/freak_csh/article/details/86677352");
                 break;
             //二维码扫描
             case R.id.btn4:

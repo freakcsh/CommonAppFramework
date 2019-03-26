@@ -2,9 +2,10 @@ package com.freak.commonappframework.model.homepage.base;
 
 import com.freak.commonappframework.app.api.ApiService;
 import com.freak.commonappframework.model.homepage.base.bean.LoginBean;
+import com.freak.commonappframework.net.HttpResult;
 import com.freak.httphelper.ApiCallback;
 import com.freak.httphelper.HttpMethods;
-import com.freak.httphelper.HttpResultFunc;
+
 import com.freak.httphelper.RxPresenter;
 import com.freak.httphelper.SubscriberCallBack;
 import com.orhanobut.logger.Logger;
@@ -21,10 +22,10 @@ public class HomepagePresenter extends RxPresenter<HomepageContract.View> implem
 
     @Override
     public void doLogin(String userName, String pwd) {
-        Observable<LoginBean> observable = apiServer.login(userName, pwd).map(new HttpResultFunc<LoginBean>());
-        addSubscription(observable, new SubscriberCallBack<>(new ApiCallback<LoginBean>() {
+        Observable<HttpResult> observable = apiServer.login(userName, pwd);
+        addSubscription(observable, new SubscriberCallBack<>(new ApiCallback<HttpResult>() {
             @Override
-            public void onSuccess(LoginBean model) {
+            public void onSuccess(HttpResult model) {
                 Logger.d(model);
             }
 
